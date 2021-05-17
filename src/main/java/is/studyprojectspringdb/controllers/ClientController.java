@@ -23,5 +23,4 @@ public class ClientController {
     public List<Client> allClient() {
         return clientRepository.findAll();
     }
-
 }

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="1" author="is">
+
+        <createTable tableName="CLIENT">
+            <column name="ID_CLIENT" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIDDLE_NAME" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BIRTHDAY" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSPORT_NUMBER" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS_REGISTRATION" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS_RESIDENTIAL" type="NVARCHAR2(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="MOBILE_PHONE" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="NVARCHAR2(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="ACCOUNT">
+            <column name="ID_ACCOUNT" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ID_CLIENT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="ACCOUNT_CLIENT_ID_CLIENT" references="CLIENT(ID_CLIENT)"/>
+            </column>
+            <column name="TYPE_ACCOUNT" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NUMBER" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="ACCOUNT_BALANCE">
+            <column name="ID_ACCOUNT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="ACCOUNT_ID_ACCOUNT_ID_ACCOUNT"
+                             references="ACCOUNT(ID_ACCOUNT)"/>
+            </column>
+            <column name="CURRENCY" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MONEY" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="APPLICATION">
+            <column name="ID_APP" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="ID_CLIENT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="APPLICATION_ID_CLIENT_ID_CLIENT"
+                             references="CLIENT(ID_CLIENT)"/>
+            </column>
+            <column name="FROM_ACCOUNT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="APPLICATION_FROM_ACCOUNT_FROM_ACCOUNT"
+                             references="ACCOUNT(ID_ACCOUNT)"/>
+            </column>
+            <column name="TO_ACCOUNT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="APPLICATION_TO_ACCOUNT_TO_ACCOUNT"
+                             references="ACCOUNT(ID_ACCOUNT)"/>
+            </column>
+            <column name="MONEY" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATION_DATE" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_REGULAR" type="NUMBER(19)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="TRANSACTION">
+            <column name="ID_TRANSACTION" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="FROM_ACCOUNT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="TRANSACTION_FROM_ACCOUNT_FROM_ACCOUNT"
+                             references="ACCOUNT(ID_ACCOUNT)"/>
+            </column>
+            <column name="TO_ACCOUNT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="TRANSACTION_TO_ACCOUNT_TO_ACCOUNT"
+                             references="ACCOUNT(ID_ACCOUNT)"/>
+            </column>
+            <column name="STATUS" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_EXECUTION" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="PAYMENT">
+            <column name="ID_PAYMENT" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ID_APP" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="PAYMENT_ID_APP_ID_APP"
+                             references="APPLICATION(ID_APP)"/>
+            </column>
+            <column name="ID_TRANSACTION" type="NUMBER(19)">
+                <constraints unique="true" nullable="false" foreignKeyName="PAYMENT_ID_TRANSACTION_ID_TRANSACTION"
+                             references="TRANSACTION(ID_TRANSACTION)"/>
+            </column>
+            <column name="MONEY" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_STATUS" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="REGULAR_PAYMENT">
+            <column name="ID_REGULAR" type="NUMBER(19)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ID_PAYMENT_LAST" type="NUMBER(19)">
+                <constraints nullable="true" foreignKeyName="REGULAR_PAYMENT_ID_PAYMENT_LAST_ID_PAYMENT"
+                             references="PAYMENT(ID_PAYMENT)"/>
+            </column>
+            <column name="DAY" type="NUMBER(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NEED" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="AUDIT_PAY">
+            <column name="ID_PAYMENT" type="NUMBER(19)">
+                <constraints nullable="false" foreignKeyName="AUDIT_PAY_ID_PAYMENT_LAST_ID_PAYMENT"
+                             references="PAYMENT(ID_PAYMENT)"/>
+            </column>
+            <column name="STATUS" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="2" author="is">
+
+        <createIndex indexName="INDEX_CLIENT_01" tableName="CLIENT">
+            <column name="LAST_NAME"/>
+            <column name="FIRST_NAME"/>
+            <column name="MIDDLE_NAME"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_CLIENT_02" tableName="CLIENT">
+            <column name="PASSPORT_NUMBER"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_ACCOUNT_CLIENT_01" tableName="ACCOUNT">
+            <column name="ACCOUNT_NUMBER"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_ACCOUNT_BALANCE_01" tableName="ACCOUNT_BALANCE">
+            <column name="ID_ACCOUNT"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_APPLICATION_01" tableName="APPLICATION">
+            <column name="FROM_ACCOUNT"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_APPLICATION_02" tableName="APPLICATION">
+            <column name="CREATION_DATE"/>
+        </createIndex>
+
+        <createIndex indexName="INDEX_PAYMENT_01" tableName="PAYMENT">
+            <column name="ID_APP"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -5,6 +5,7 @@ import is.studyprojectspringdb.entity.Client;
 import is.studyprojectspringdb.service.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,5 +23,11 @@ public class ClientController {
     @GetMapping("/client/all")
     public List<Client> allClient() {
         return clientRepository.findAll();
+    }
+
+    @GetMapping("/client/id")
+    public Client idClient(@RequestParam long id) {
+        System.out.println(id);
+        return clientRepository.getById(id);
     }
 }

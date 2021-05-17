@@ -1,11 +1,13 @@
 package is.studyprojectspringdb.entity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Getter
@@ -13,8 +15,9 @@ import javax.persistence.*;
 @ToString
 @EqualsAndHashCode
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Table(name = "CLIENT")
-public class Client {
+public class Client implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
